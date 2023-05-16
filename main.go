@@ -5,14 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	// "fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"sort"
 	"strconv"
 
-	// "strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -98,38 +96,43 @@ var cache *redis.Client
 var err error
 
 func main() {
-  r := gin.Default()
+	r := gin.Default()
 
-  http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true} 
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true} 
 
-  dsn := "host=postgres user=postgres password=postgres1234 dbname=postgres port=5432 sslmode=disable"
-  db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dsn := "host=postgres user=postgres password=postgres1234 dbname=postgres port=5432 sslmode=disable"
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-  if err != nil {
-	log.Fatalf(err.Error())
-    panic("failed to connect database")
-  }
+	if err != nil {
+		log.Fatalf(err.Error())
+		panic("failed to connect database")
+	}
 
-  db.AutoMigrate(&Comment{})
-
-  cache = redis.NewClient(
-	&redis.Options{
-		Addr: "redis:6379",
+	db.AutoMigrate(&Comment{})
+	
+	cache = redis.NewClient(
+		&redis.Options{
+			Addr: "redis:6379",
 	})
 
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+		  "message": "hello world!",
+		})
+	})
 
-  r.GET("/ping", func(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{
-      "message": "pong",
-    })
-  })
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+		"message": "pong",
+		})
+	})
 
-  r.GET("/movies", GetMovies)
-  r.GET("/movies/:id/comments", GetComments)
-  r.POST("/movies/:id/comments", AddComment)
-  r.GET("/movies/:id/characters", GetCharacters)
+	r.GET("/movies", GetMovies)
+	r.GET("/movies/:id/comments", GetComments)
+	r.POST("/movies/:id/comments", AddComment)
+	r.GET("/movies/:id/characters", GetCharacters)
 
-  r.Run() 
+  	r.Run() 
 }
 
 func GetMovies(ctx *gin.Context) {

@@ -9,7 +9,7 @@ services:
       - '5432:5432'
     networks:
       - backend-net
-    restart: on-failure:3
+    # restart: on-failure:3
 
   redis:
     image: redis
@@ -31,12 +31,14 @@ services:
     depends_on:
       - postgres
       - redis
+    links:
+      - postgres:postgres
     networks:
       - backend-net
-    restart: on-failure:3
+    # restart: on-failure:3
 
 networks:
   backend-net:
-    # driver: bridge
+    driver: bridge
     external: true
     name: services_net
