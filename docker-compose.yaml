@@ -9,7 +9,6 @@ services:
       - '5432:5432'
     networks:
       - backend-net
-    # restart: on-failure:3
 
   redis:
     image: redis
@@ -35,7 +34,6 @@ services:
       - postgres:postgres
     networks:
       - backend-net
-    # restart: on-failure:3
 
 networks:
   backend-net:
