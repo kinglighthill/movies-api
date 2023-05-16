@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   postgres:
     image: postgres:14.1-alpine
@@ -30,13 +31,10 @@ services:
     depends_on:
       - postgres
       - redis
-    links:
-      - postgres:postgres
     networks:
       - backend-net
 
 networks:
   backend-net:
     driver: bridge
-    external: true
     name: services_net
